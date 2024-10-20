@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,17 +30,16 @@ public class UserServiceImpl implements UserService {
 
     List<User> users = userRepository.findAll();
 
+    List<ListUserDto> userDtos = users.stream()
+            .map(item -> {
+              ListUserDto dto = new ListUserDto();
+              dto.setId(item.getId());
+              dto.setName(item.getName());
+              return dto;
+            })
+            .toList();
+
     UserListDTO userListDTO = new UserListDTO();
-    List<ListUserDto> userDtos = new ArrayList<>(users.size());
-
-    for (User item : users) {
-      ListUserDto dto = new ListUserDto();
-
-      dto.setId(item.getId());
-      dto.setName(item.getName());
-
-      userDtos.add(dto);
-    }
 
     userListDTO.setPageable(new SimplePageable());
     userListDTO.setUsers(userDtos);
