@@ -81,10 +81,13 @@ public class UserServiceImpl implements UserService {
 		try {
 			var user = userRepository.findById(id);
 
-			if (user.isPresent()) {
-				userUpdate.setId(id);
-				userRepository.save(userUpdate);
+			if (user.isEmpty()) {
+				throw new RuntimeException("No Value Present");
 			}
+
+			userUpdate.setId(id);
+			userRepository.save(userUpdate);
+
 			return userUpdate;
 		} catch (Exception throwable) {
 			throw new NoSuchElementException(throwable.getMessage());
