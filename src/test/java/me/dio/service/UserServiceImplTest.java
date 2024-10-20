@@ -120,4 +120,19 @@ public class UserServiceImplTest {
 		when(userRepository.existsByAccountNumber(any())).thenReturn(Boolean.TRUE);
 		Assertions.assertThrows(IllegalArgumentException.class, () -> userService.create(obj));
 	}
+
+	@Test
+	void testUpdate() {
+		User obj = new User();
+		obj.setId(1L);
+		obj.setName("test");
+		Account account = new Account();
+		account.setId(1L);
+		account.setNumber("123");
+		obj.setAccount(account);
+		when(userRepository.findById(any())).thenReturn(Optional.of(obj));
+		when(userRepository.save(any())).thenReturn(obj);
+		var response = userService.update(1L, obj);
+		assertNotNull(response);
+	}
 }
