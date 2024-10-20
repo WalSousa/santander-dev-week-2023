@@ -6,6 +6,7 @@ import me.dio.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -18,6 +19,11 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
 
     @Override
     public User findById(Long id){
