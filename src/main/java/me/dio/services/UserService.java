@@ -1,12 +1,11 @@
 package me.dio.services;
 
 import me.dio.domain.model.User;
-
-import java.util.List;
+import me.dio.domain.model.UserListDTO;
 
 public interface UserService {
 
-    List<User> getAll();
+    UserListDTO getAll();
     User findById(Long id);
     User create(User userToCreate);
 }

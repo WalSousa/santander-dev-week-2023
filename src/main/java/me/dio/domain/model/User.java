@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 import java.util.List;
+
 @Entity(name = "tb_user")
 public class User {
 

@@ -1,6 +1,7 @@
 package me.dio.controller;
 
 import me.dio.domain.model.User;
+import me.dio.domain.model.UserListDTO;
 import me.dio.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,11 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> findAll() {
+    public ResponseEntity<UserListDTO> findAll() {
         var users = userService.getAll();
+        if (users.getUsers().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(users);
     }
 
