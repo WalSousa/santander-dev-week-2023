@@ -17,50 +17,79 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-  private final UserRepository userRepository;
+	private final UserRepository userRepository;
 
-  @Autowired
-  public UserServiceImpl(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
+	@Autowired
+	public UserServiceImpl(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 
 
-  @Override
-  public UserListDTO getAll() {
+	@Override
+	public UserListDTO getAll() {
 
-    List<User> users = userRepository.findAll();
+		List<User> users = userRepository.findAll();
 
-    List<ListUserDto> userDtos = users.stream()
-            .map(item -> {
-              ListUserDto dto = new ListUserDto();
-              dto.setId(item.getId());
-              dto.setName(item.getName());
-              return dto;
-            })
-            .toList();
+		List<ListUserDto> userDtos = users.stream()
+						.map(item -> {
+							ListUserDto dto = new ListUserDto();
+							dto.setId(item.getId());
+							dto.setName(item.getName());
+							return dto;
+						})
+						.toList();
 
-    UserListDTO userListDTO = new UserListDTO();
+		UserListDTO userListDTO = new UserListDTO();
 
-    userListDTO.setPageable(new SimplePageable());
-    userListDTO.setUsers(userDtos);
+		userListDTO.setPageable(new SimplePageable());
+		userListDTO.setUsers(userDtos);
 
-    return userListDTO;
-  }
+		return userListDTO;
+	}
 
-  @Override
-  public User findById(Long id) {
-    try {
-      return userRepository.findById(id).orElseThrow();
-    } catch (Exception throwable) {
-      throw new NoSuchElementException(throwable.getMessage());
-    }
-  }
+	@Override
+	public User findById(Long id) {
+		try {
+			return userRepository.findById(id).orElseThrow();
+		} catch (Exception throwable) {
+			throw new NoSuchElementException(throwable.getMessage());
+		}
+	}
 
-  @Override
-  public User create(User userToCreate) {
-    if (userRepository.existsByAccountNumber(userToCreate.getAccount().getNumber())) {
-      throw new IllegalArgumentException("this user Account number already exists");
-    }
-    return userRepository.save(userToCreate);
-  }
+	@Override
+	public User create(User userToCreate) {
+		if (userRepository.existsByAccountNumber(userToCreate.getAccount().getNumber())) {
+			throw new IllegalArgumentException("this user Account number already exists");
+		}
+		return userRepository.save(userToCreate);
+	}
+
+	@Override
+	public void deleteById(Long id) {
+		try {
+			var user = userRepository.findById(id);
+			if (user.isPresent()) {
+				userRepository.deleteById(id);
+			} else {
+				throw new RuntimeException("No value Present");
+			}
+		} catch (Exception throwable) {
+			throw new NoSuchElementException(throwable.getMessage());
+		}
+	}
+
+	@Override
+	public User update(Long id, User userUpdate) {
+		try {
+			var user = userRepository.findById(id);
+
+			if (user.isPresent()) {
+				userUpdate.setId(id);
+				userRepository.save(userUpdate);
+			}
+			return userUpdate;
+		} catch (Exception throwable) {
+			throw new NoSuchElementException(throwable.getMessage());
+		}
+	}
 }
